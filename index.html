@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Unit 2 Timeline</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Newsreader:opsz,wght@6..72,500;6..72,700&display=swap">
+<style>
+:root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --bg: #f6f7f9; --panel: #ffffff; --ink: #172033; --muted: #52607a; --line: #d5dae3;
+  --gov: #1f4e8c; --war: #a62f3d; --econ: #26704a; --slav: #6a3f99; --nat: #a8651a;
+  --serif: "Newsreader", Georgia, "Times New Roman", serif;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11161f; --panel: #181f2c; --ink: #e8edf5; --muted: #a3afc5; --line: #2d374a;
+    --gov: #7fb0ee; --war: #f08a97; --econ: #6fcf9b; --slav: #bb9be8; --nat: #f0b25f;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #11161f; --panel: #181f2c; --ink: #e8edf5; --muted: #a3afc5; --line: #2d374a;
+  --gov: #7fb0ee; --war: #f08a97; --econ: #6fcf9b; --slav: #bb9be8; --nat: #f0b25f;
+  color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: inherit; }
+html { height: 100%; scroll-padding-top: calc(env(safe-area-inset-top, 0px) + 4.5rem); }
+body {
+  margin: 0; min-height: 100%; background: var(--bg); color: var(--ink);
+  font-family: var(--sans); font-size: 1.0625rem; line-height: 1.5;
+}
+body::before {
+  content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px);
+  background: var(--panel); z-index: 10;
+}
+button, input { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--gov); outline-offset: 2px; }
+
+.wrap { max-width: 64rem; margin: 0 auto; padding: 0 1.1rem; }
+
+header.top { padding: 2rem 0 1rem; }
+header.top h1 {
+  font-family: var(--serif); font-weight: 700; font-size: clamp(1.9rem, 4.6vw, 3rem);
+  line-height: 1.1; margin: 0 0 .5rem; letter-spacing: -0.01em;
+}
+header.top p.lede { margin: 0; max-width: 42rem; color: var(--muted); font-size: 1.05rem; }
+
+.controls { display: grid; gap: .75rem; padding: .5rem 0 1.1rem; }
+.chips { display: flex; flex-wrap: wrap; gap: .45rem; }
+.chip {
+  display: inline-flex; align-items: center; gap: .45rem; padding: .35rem .8rem;
+  border: 1.5px solid var(--line); border-radius: 999px; background: var(--panel); cursor: pointer;
+  font-size: .95rem;
+}
+.chip .sw { width: .8rem; height: .8rem; border-radius: 50%; background: var(--c); }
+.chip[aria-pressed="false"] { opacity: .5; }
+.chip[aria-pressed="true"] { border-color: var(--c); }
+.row2 { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; }
+.search {
+  flex: 1 1 14rem; padding: .5rem .8rem; border: 1.5px solid var(--line); border-radius: 8px; background: var(--panel);
+}
+.btn {
+  padding: .5rem .9rem; border: 1.5px solid var(--line); border-radius: 8px; background: var(--panel); cursor: pointer;
+}
+.btn[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.count { color: var(--muted); font-size: .95rem; margin-left: auto; }
+
+/* sticky presidents bar */
+.termsbar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 11;
+  background: var(--panel); border-block: 1px solid var(--line); padding: .55rem 0;
+}
+.termsbar .wrap { display: flex; gap: 3px; }
+.term {
+  flex: var(--w) 1 0; min-width: 3.4rem; padding: .4rem .35rem; text-align: left; cursor: pointer;
+  border: 1.5px solid var(--line); border-radius: 6px; background: var(--bg); line-height: 1.2;
+}
+.term .nm { display: block; font-weight: 700; font-size: .9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.term .yrs { display: block; color: var(--muted); font-size: .78rem; white-space: nowrap; }
+.term.active { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.term.active .yrs { color: inherit; opacity: .8; }
+.term.conf { border-style: dashed; }
+@media (max-width: 40rem) {
+  .term .full { display: none; } .term .short { display: inline; }
+  .term .yrs { display: none; }
+}
+@media (min-width: 40.01rem) { .term .short { display: none; } }
+
+/* sections */
+section.era { padding-top: 2.4rem; }
+.era-head { border-left: 6px solid var(--ink); padding: .15rem 0 .15rem 1rem; margin-bottom: .6rem; }
+.era-head h2 { font-family: var(--serif); font-size: clamp(1.5rem, 3.4vw, 2.1rem); margin: 0; line-height: 1.15; }
+.era-head .meta { margin: .2rem 0 0; color: var(--muted); }
+.era-head .stories { margin: .35rem 0 0; max-width: 40rem; }
+
+.ev {
+  display: grid; grid-template-columns: 5.2rem 1fr; gap: 0 1.1rem;
+  padding: 1rem 0; border-top: 1px solid var(--line); cursor: default;
+}
+.ev[hidden] { display: none; }
+.when { text-align: right; }
+.yr { display: block; font-family: var(--serif); font-weight: 700; font-size: 1.7rem; line-height: 1; }
+.yr.span { font-size: 1.25rem; }
+.mo { display: block; color: var(--muted); font-size: .9rem; margin-top: .2rem; }
+.body h3 { font-family: var(--serif); font-size: 1.28rem; line-height: 1.25; margin: 0 0 .15rem; font-weight: 700; }
+.cat { display: inline-flex; align-items: center; gap: .4rem; font-size: .88rem; font-weight: 700; color: var(--c); margin: 0 0 .35rem; }
+.cat .sw { width: .7rem; height: .7rem; background: var(--c); border-radius: 2px; }
+.body p { margin: 0 0 .35rem; max-width: 40rem; }
+.nxt { color: var(--ink); }
+.nxt b { font-weight: 700; }
+.fine { color: var(--muted); font-size: .88rem; }
+.ev[data-cat="gov"] { --c: var(--gov); } .ev[data-cat="war"] { --c: var(--war); }
+.ev[data-cat="econ"] { --c: var(--econ); } .ev[data-cat="slav"] { --c: var(--slav); } .ev[data-cat="nat"] { --c: var(--nat); }
+
+.empty { padding: 1rem 0; color: var(--muted); border-top: 1px solid var(--line); }
+
+/* quiz mode: cover dates until tapped */
+body.quiz .ev:not(.shown) .when, body.quiz .ev:not(.shown) .presline { filter: blur(7px); user-select: none; }
+body.quiz .ev { cursor: pointer; }
+body.quiz .ev:not(.shown)::after { content: none; }
+
+footer.end { padding: 2.5rem 0 3rem; color: var(--muted); font-size: .92rem; border-top: 1px solid var(--line); margin-top: 2rem; }
+
+@media (max-width: 36rem) {
+  .ev { grid-template-columns: 3.6rem 1fr; gap: 0 .75rem; }
+  .yr { font-size: 1.3rem; } .yr.span { font-size: 1rem; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+@media print {
+  body::before, .controls, .termsbar { display: none !important; }
+  :root { --bg: #fff; --panel: #fff; --ink: #000; --muted: #333; --line: #bbb; }
+  .ev { break-inside: avoid; } section.era { break-before: auto; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1>Unit 2 Timeline</h1>
+    <p class="lede">Every event is listed under the president (or government) in office when it happened, so you can see what came first and who was in charge. Filter by topic, search, or cover the dates to quiz yourself.</p>
+  </header>
+  <div class="controls">
+    <div class="chips" id="chips" role="group" aria-label="Filter by topic"></div>
+    <div class="row2">
+      <input class="search" id="q" type="search" placeholder="Search events (try “bank” or “Jackson”)" aria-label="Search events">
+      <button class="btn" id="quizbtn" aria-pressed="false" title="Blur the dates; tap an event to reveal it">Quiz mode: cover the dates</button>
+      <button class="btn" id="reset">Show everything</button>
+      <span class="count" id="count" aria-live="polite"></span>
+    </div>
+  </div>
+</div>
+
+<nav class="termsbar" aria-label="Presidential terms">
+  <div class="wrap" id="terms"></div>
+</nav>
+
+<main class="wrap" id="main"></main>
+
+<footer class="end">
+  <div class="wrap">Built from the American Yawp (Ch. 7–9) and class lessons. Events from outside the textbook are labeled. Jackson takes office in March 1829.</div>
+</footer>
+
+<script>
+const TERMS = [
+  { id: "conf", name: "Confederation Congress", short: "Confed.", start: 0, spanStart: 1787.5, party: "Government under the Articles of Confederation", label: "to April 1789",
+    stories: "A weak national government gives way to the Constitution." },
+  { id: "wash", name: "George Washington", short: "Washington", start: 1789.25, party: "No party", label: "1789–1797",
+    stories: "Hamilton’s financial plan, the Bill of Rights, the Whiskey Rebellion, neutrality, Jay’s Treaty, and the first political parties." },
+  { id: "adams", name: "John Adams", short: "Adams", start: 1797.1667, party: "Federalist", label: "1797–1801",
+    stories: "The XYZ Affair, the Quasi-War, and the Alien and Sedition Acts." },
+  { id: "jeff", name: "Thomas Jefferson", short: "Jefferson", start: 1801.1667, party: "Democratic-Republican", label: "1801–1809",
+    stories: "Marbury v. Madison, the Louisiana Purchase, and the Embargo Act." },
+  { id: "mad", name: "James Madison", short: "Madison", start: 1809.1667, party: "Democratic-Republican", label: "1809–1817",
+    stories: "The War of 1812, the Hartford Convention, and the Second National Bank." },
+  { id: "mon", name: "James Monroe", short: "Monroe", start: 1817.1667, party: "Democratic-Republican", label: "1817–1825",
+    stories: "The Seminole War, Adams-Onís, the Monroe Doctrine, and the election of 1824." },
+  { id: "jqa", name: "John Quincy Adams", short: "Q. Adams", start: 1825.1667, party: "Democratic-Republican", label: "1825–1829",
+    stories: "The fallout from the “corrupt bargain,” the Erie Canal, and Jackson’s victory in 1828." }
+];
+const END = 1829.1667;
+
+const CATS = {
+  gov:  { label: "Government & politics" },
+  war:  { label: "Foreign affairs & war" },
+  econ: { label: "Economy & technology" },
+  slav: { label: "Slavery & race" },
+  nat:  { label: "Native nations" }
+};
+const MONTHS = ["Jan.","Feb.","Mar.","Apr.","May","June","July","Aug.","Sept.","Oct.","Nov.","Dec."];
+
+// y, m (1–12, used for ordering), show (optional display text), pres (optional override)
+const EVENTS = [
+ {y:1787,m:7,title:"Northwest Ordinance",cat:"gov",text:"Sets rules for the Northwest Territory. Article VI bans slavery north and west of the Ohio River.",next:"Many Americans expect slavery to fade, but Congress soon starts balancing free and slave states.",src:"Ch. 7 §IX"},
+ {y:1787,m:8,title:"Slave-trade compromise",cat:"slav",text:"New England agrees to protect the foreign slave trade for 20 years. South Carolina and Georgia back commercial laws. The three-fifths clause counts enslaved people for representation.",next:"Congress bans the Atlantic slave trade in 1808.",src:"Ch. 7 §V"},
+ {y:1788,m:6,show:"1788",title:"Constitution takes effect",cat:"gov",text:"Enough states ratify for the Constitution to take effect. Virginia votes 89–79.",next:"Rhode Island holds out until 1790.",src:"Ch. 7 §IV"},
+
+ {y:1789,m:4,title:"Washington becomes president",cat:"gov",text:"Washington takes office as the first president under the Constitution.",src:"Ch. 7"},
+ {y:1789,m:7,show:"1789",title:"French Revolution begins",cat:"war",text:"The French overthrow their king. At first Americans cheer with parades and ribbons pinned to their hats.",next:"The execution of the king and the Reign of Terror turn many Americans against it.",src:"Ch. 7 §VIII"},
+ {y:1789,m:9,show:"1789",title:"Slater builds an English-style textile mill",cat:"econ",text:"Samuel Slater, a British immigrant, copies English textile machines in Rhode Island.",next:"Francis Cabot Lowell takes the idea further in 1813.",src:"Ch. 9 §II"},
+ {y:1790,m:3,title:"Naturalization Act of 1790",cat:"slav",text:"Limits federal citizenship for immigrants to “free, white people.”",src:"Ch. 7 §IX"},
+ {y:1790,m:5,title:"Rhode Island ratifies",cat:"gov",text:"The last of the 13 states ratifies, a year after Washington took office.",src:"Ch. 7 §IV"},
+ {y:1790,m:8,show:"1790",title:"Federal government assumes state war debts",cat:"econ",text:"Hamilton’s plan has the federal government take over about $25 million of state war debts. Critics say it rewards speculators.",next:"Hamilton proposes a national bank and a whiskey tax to support the new debt.",src:"Ch. 7 §VI"},
+ {y:1791,m:2,title:"Bank of the United States chartered",cat:"econ",text:"Twenty-year charter; the government owns 20 percent. Jefferson says the Constitution never allowed it; Hamilton says it is essential.",next:"The Second National Bank follows in 1816, and Jackson fights it in the 1830s.",src:"Ch. 7 §VI"},
+ {y:1791,m:3,title:"Vermont joins the Union (free)",cat:"slav",text:"Vermont enters as a free state.",next:"Kentucky enters as a slave state in 1792.",src:"Ch. 7 §IX"},
+ {y:1791,m:3,show:"1791",title:"Excise tax on whiskey",cat:"econ",text:"To pay the new debt, the government taxes whiskey. Western farmers, who turn grain into whiskey, are hit hardest.",next:"Protests become the Whiskey Rebellion in 1794.",src:"Ch. 7 §VII"},
+ {y:1791,m:12,title:"Bill of Rights ratified",cat:"gov",text:"Ten amendments are added to the Constitution. Madison supports them as a political compromise.",src:"Ch. 7 §V"},
+ {y:1792,m:6,title:"Kentucky joins the Union (slave)",cat:"slav",text:"Kentucky enters as a slave state, and Congress begins balancing free and slave states.",src:"Ch. 7 §IX"},
+ {y:1793,m:1,title:"King Louis XVI executed",cat:"war",text:"The French king is executed and the Reign of Terror follows, turning many Americans against the French Revolution.",src:"Ch. 7 §VIII"},
+ {y:1793,m:2,title:"Fugitive Slave Law of 1793",cat:"slav",text:"Makes helping a person escape slavery a federal crime.",src:"Ch. 7 §IX"},
+ {y:1793,m:4,title:"Citizen Genêt arrives",cat:"war",text:"The French ambassador urges Americans to attack Spain’s colonies. Washington demands his recall, but Genêt stays in America.",src:"Ch. 7 §VIII"},
+ {y:1793,m:4,title:"Neutrality Proclamation",cat:"war",text:"Washington declares that the United States will not take sides in Britain’s war with France.",next:"British impressment and ship seizures continue, leading to Jay’s Treaty.",src:"Ch. 7 §VII–VIII"},
+ {y:1794,m:3,show:"1794",title:"Cotton gin",cat:"econ",text:"The cotton gin makes short-staple cotton profitable and spreads plantation slavery westward.",next:"Enslaved population grows from about 654,000 (1790) to over 1.1 million (1810).",src:"Ch. 7 §IX"},
+ {y:1794,m:7,title:"Whiskey Rebellion",cat:"gov",text:"About 7,000 armed farmers gather near Pittsburgh. Washington raises 13,000 militia and leads them briefly; the rebels scatter.",src:"Ch. 7 §VII"},
+ {y:1794,m:11,title:"Jay’s Treaty",cat:"war",text:"Britain agrees to leave its Northwest forts by 1796, but impressment continues. Republicans are furious.",next:"The fight over the treaty turns two factions into two parties.",src:"Ch. 7 §VII"},
+ {y:1796,m:9,title:"Washington’s Farewell Address",cat:"gov",text:"Washington warns against party spirit and foreign entanglements, and steps down after two terms.",src:"Ch. 7 §XII; Yawp Reader"},
+ {y:1796,m:11,title:"John Adams elected",cat:"gov",text:"Adams wins the presidency, and power passes peacefully from Washington.",src:"Ch. 7 §VIII"},
+
+ {y:1797,m:10,show:"1797–98",title:"XYZ Affair",cat:"war",text:"French agents hint at a bribe before talks. Americans are furious: “Millions for defense, but not one cent for tribute.”",next:"Leads to the Quasi-War and the Alien and Sedition Acts.",src:"Ch. 7 §VIII"},
+ {y:1798,m:2,show:"1798",title:"Quasi-War with France",cat:"war",text:"An undeclared naval war with France, fought mostly at sea.",src:"Ch. 7 §VIII"},
+ {y:1798,m:7,title:"Alien and Sedition Acts",cat:"gov",text:"Allow deporting foreigners and punishing criticism of the government. Republican printers are prosecuted.",next:"Jefferson and Madison answer with the Kentucky and Virginia Resolutions.",src:"Ch. 7 §VIII"},
+ {y:1798,m:11,show:"1798–99",title:"Kentucky and Virginia Resolutions",cat:"gov",text:"Jefferson and Madison argue that states can declare federal laws unconstitutional.",next:"The idea returns in the Nullification Crisis of 1832.",src:"Ch. 7 §VIII"},
+ {y:1800,m:8,title:"Gabriel’s Rebellion",cat:"slav",text:"About 1,000 enslaved men plan to attack Richmond. The plot is betrayed, and Gabriel and others are executed.",src:"Ch. 8 §II"},
+ {y:1800,m:11,title:"Election of 1800",cat:"gov",text:"Jefferson and Aaron Burr tie with 73 electoral votes each; Adams gets 65. The tie goes to the House.",next:"The House needs 36 ballots, in February 1801.",src:"Ch. 7 §XI"},
+ {y:1801,m:2,title:"House elects Jefferson",cat:"gov",text:"The House breaks the tie on the 36th ballot. Adams leaves office peacefully on March 4.",next:"The Twelfth Amendment (1804) changes the electoral rules.",src:"Ch. 7 §XI"},
+
+ {y:1803,m:2,title:"Marbury v. Madison",cat:"gov",text:"The Supreme Court claims judicial review: the power to strike down laws that violate the Constitution.",src:"Ch. 7 §XI"},
+ {y:1803,m:4,show:"1803",title:"Louisiana Purchase",cat:"war",text:"Jefferson buys Louisiana from Napoleon for $15 million, doubling the country. Federalists worry it will add slave states.",src:"Ch. 8 §IV"},
+ {y:1804,m:1,show:"1804",title:"Haiti declares independence",cat:"slav",text:"The Haitian Revolution succeeds. It inspires Black Americans and terrifies many white Americans.",src:"Ch. 8 §II"},
+ {y:1804,m:6,show:"1804",title:"Twelfth Amendment",cat:"gov",text:"Changes the electoral rules to prevent deadlocks like the one in 1800.",src:"Ch. 7 §XI"},
+ {y:1807,m:6,title:"British warship attacks the USS Chesapeake",cat:"war",text:"HMS Leopard attacks an American frigate, outraging Americans over impressment.",next:"Jefferson answers with the Embargo Act.",src:"Ch. 8 §IV"},
+ {y:1807,m:8,title:"Fulton’s steamboat service on the Hudson",cat:"econ",text:"Robert Fulton starts the first commercial steamboat service.",next:"By 1830 more than 200 steamboats run on Western waters.",src:"Ch. 9 §II"},
+ {y:1807,m:12,title:"Embargo Act",cat:"war",text:"Jefferson closes U.S. ports to foreign trade. It hurts Americans more than Europe, and smuggling grows.",src:"Ch. 8 §IV"},
+ {y:1808,m:1,title:"Atlantic slave trade ban takes effect",cat:"slav",text:"Congress ends the legal import of Africans. Enforcement is weak, and slavery keeps growing.",src:"Ch. 7 §V"},
+ {y:1809,m:3,title:"Embargo repealed",cat:"war",text:"Congress ends the embargo after about fifteen months. Madison takes office days later.",pres:"jeff",src:"Ch. 8 §VI"},
+
+ {y:1811,m:11,title:"Battle of Tippecanoe",cat:"nat",text:"Forces led by William Henry Harrison drive the Prophet’s followers from their gathering place. Tension grows with Native nations and Britain.",next:"Helps push Americans toward the War of 1812.",src:"Ch. 8 §VI"},
+ {y:1812,m:6,title:"War of 1812 declared",cat:"war",text:"Madison signs the declaration of war on June 18 over impressment, trade restrictions, and frontier conflict.",src:"Ch. 8 §VI"},
+ {y:1812,m:8,title:"USS Constitution becomes “Old Ironsides”",cat:"war",text:"British cannonballs bounce off its thick hull.",src:"Ch. 8 §VI"},
+ {y:1813,m:6,show:"1813",title:"Lowell’s powered loom",cat:"econ",text:"Francis Cabot Lowell memorizes and smuggles British loom designs, starting the Waltham-Lowell mill system.",src:"Ch. 9 §II"},
+ {y:1813,m:10,show:"1813",title:"Tecumseh killed",cat:"nat",text:"By the end of 1813 Americans recapture Detroit, shatter the Native alliance, and kill Tecumseh.",src:"Ch. 8 §VI"},
+ {y:1814,m:3,title:"Battle of Horseshoe Bend",cat:"nat",text:"Andrew Jackson wins a decisive victory in the Creek War.",src:"Ch. 9 §III"},
+ {y:1814,m:8,title:"British burn Washington, D.C.",cat:"war",text:"British forces burn the capital on August 24.",src:"Ch. 8 §VI"},
+ {y:1814,m:9,title:"Fort McHenry and the “Star-Spangled Banner”",cat:"war",text:"Fort McHenry withstands a 27-hour bombardment, inspiring Francis Scott Key’s poem.",src:"Ch. 8 §VI"},
+ {y:1814,m:12,title:"Hartford Convention",cat:"gov",text:"New England Federalists propose amendments, including ending the three-fifths rule. Critics accuse them of plotting secession.",src:"Ch. 8 §VI"},
+ {y:1814,m:12,title:"Treaty of Ghent signed",cat:"war",text:"Signed December 24, the treaty ends the war and returns relations to their prewar state.",next:"The Battle of New Orleans comes after the signing.",src:"Ch. 8 §VI"},
+ {y:1815,m:1,title:"Battle of New Orleans",cat:"war",text:"Jackson’s victory comes after the treaty is signed, but it boosts American morale and shapes how the war is remembered.",src:"Ch. 8 §VI"},
+ {y:1816,m:4,title:"Second National Bank chartered",cat:"econ",text:"Regulates state banks and issues a uniform national currency.",next:"Jackson fights it in the Bank War of the 1830s.",src:"Ch. 9 §I"},
+ {y:1817,m:2,show:"1817",title:"Calhoun urges roads and canals",cat:"econ",text:"John C. Calhoun urges a “perfect system of roads and canals” to bind the republic together.",next:"Clay names the “American System” in 1824.",src:"Ch. 8 §VI"},
+
+ {y:1818,m:4,show:"1818",title:"Jackson invades Spanish Florida",cat:"war",text:"The First Seminole War. Jackson’s invasion puts pressure on Spain.",next:"Spain gives Florida to the United States in 1819.",src:"Ch. 9 §III"},
+ {y:1819,m:2,title:"Adams-Onís Treaty",cat:"war",text:"Spain gives Florida to the United States.",src:"Ch. 9 §III"},
+ {y:1823,m:12,title:"Monroe Doctrine",cat:"war",text:"Monroe declares the Western Hemisphere closed to new European colonization.",src:"Ch. 8 §VI"},
+ {y:1824,m:3,title:"Clay names the “American System”",cat:"econ",text:"Henry Clay defends a protective tariff, a national bank, and federally funded internal improvements.",src:"House History and Senate.gov (outside the textbook)"},
+ {y:1824,m:11,title:"Election of 1824",cat:"gov",text:"Four candidates split the vote. Jackson wins the most votes but no majority, so the House decides.",next:"The House picks John Quincy Adams in February 1825.",src:"Ch. 9 §III"},
+ {y:1825,m:2,title:"House elects John Quincy Adams",cat:"gov",text:"Clay’s support helps Adams win. Jackson’s backers call it a “corrupt bargain” when Clay becomes secretary of state.",next:"Jackson runs again in 1828.",src:"Ch. 9 §III"},
+ {y:1825,m:10,title:"Erie Canal opens",cat:"econ",text:"A 363-mile canal links the Great Lakes to the Hudson River and New York City.",src:"Ch. 9 §II"},
+ {y:1828,m:11,title:"Election of 1828",cat:"gov",text:"Jackson defeats Adams after a bitter campaign. He takes office in March 1829.",src:"Ch. 9 §III"}
+];
+
+const tOf = e => e.y + (e.m - 1) / 12;
+EVENTS.forEach((e, i) => { e._i = i; });
+EVENTS.sort((a, b) => tOf(a) - tOf(b) || a._i - b._i);
+function termFor(e) {
+  if (e.pres) return TERMS.find(t => t.id === e.pres);
+  const t = tOf(e);
+  let hit = TERMS[0];
+  for (const term of TERMS) if (t >= term.start) hit = term;
+  return hit;
+}
+EVENTS.forEach(e => { e.term = termFor(e); });
+
+const $ = (s, r = document) => r.querySelector(s);
+const state = { cats: new Set(Object.keys(CATS)), q: "", quiz: false };
+
+// chips
+const chips = $("#chips");
+Object.entries(CATS).forEach(([k, v]) => {
+  const b = document.createElement("button");
+  b.className = "chip"; b.type = "button"; b.setAttribute("aria-pressed", "true");
+  b.style.setProperty("--c", `var(--${k})`);
+  b.innerHTML = '<span class="sw"></span>';
+  b.append(document.createTextNode(v.label));
+  b.addEventListener("click", () => {
+    if (state.cats.has(k)) state.cats.delete(k); else state.cats.add(k);
+    b.setAttribute("aria-pressed", String(state.cats.has(k)));
+    apply();
+  });
+  chips.append(b);
+});
+
+// terms bar + sections
+const termsEl = $("#terms"), main = $("#main");
+TERMS.forEach((t, idx) => {
+  const next = TERMS[idx + 1];
+  const span = (next ? next.start : END) - (t.id === "conf" ? t.spanStart : t.start);
+  const btn = document.createElement("button");
+  btn.type = "button"; btn.className = "term" + (t.id === "conf" ? " conf" : ""); btn.id = "b-" + t.id;
+  btn.style.setProperty("--w", span.toFixed(2));
+  btn.innerHTML = '<span class="nm"><span class="full"></span><span class="short"></span></span><span class="yrs"></span>';
+  $(".full", btn).textContent = t.name; $(".short", btn).textContent = t.short; $(".yrs", btn).textContent = t.label;
+  btn.addEventListener("click", () => {
+    document.getElementById("t-" + t.id).scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+  });
+  termsEl.append(btn);
+
+  const sec = document.createElement("section");
+  sec.className = "era"; sec.id = "t-" + t.id; sec.dataset.term = t.id;
+  sec.innerHTML = '<div class="era-head"><h2></h2><p class="meta"></p><p class="stories"></p></div><div class="list"></div>';
+  $("h2", sec).textContent = t.name;
+  $(".meta", sec).textContent = t.party + " · " + t.label;
+  $(".stories", sec).textContent = t.stories;
+  main.append(sec);
+});
+
+// events
+EVENTS.forEach(e => {
+  const el = document.createElement("article");
+  el.className = "ev"; el.dataset.cat = e.cat;
+  const yearText = e.show || String(e.y);
+  const mo = e.show ? "" : MONTHS[e.m - 1];
+  el.innerHTML = '<div class="when"><span class="yr"></span><span class="mo"></span></div>' +
+    '<div class="body"><h3></h3><p class="cat"><span class="sw"></span><span class="cl"></span></p><p class="txt"></p><p class="nxt" hidden></p><p class="fine presline"></p><p class="fine srcline"></p></div>';
+  const yr = $(".yr", el); yr.textContent = yearText; if (yearText.length > 4) yr.classList.add("span");
+  $(".mo", el).textContent = mo;
+  $("h3", el).textContent = e.title;
+  $(".cl", el).textContent = CATS[e.cat].label;
+  $(".txt", el).textContent = e.text;
+  if (e.next) { const n = $(".nxt", el); n.hidden = false; n.innerHTML = "<b>Leads to:</b> "; n.append(document.createTextNode(e.next)); }
+  $(".presline", el).textContent = "In office: " + e.term.name;
+  $(".srcline", el).textContent = "Where to read it: " + e.src;
+  el.addEventListener("click", () => { if (state.quiz) el.classList.toggle("shown"); });
+  e.el = el;
+  $("#t-" + e.term.id + " .list").append(el);
+});
+
+function apply() {
+  const q = state.q.trim().toLowerCase();
+  let shown = 0;
+  EVENTS.forEach(e => {
+    const hay = (e.title + " " + e.text + " " + (e.next || "") + " " + CATS[e.cat].label).toLowerCase();
+    const ok = state.cats.has(e.cat) && (!q || hay.includes(q));
+    e.el.hidden = !ok; if (ok) shown++;
+  });
+  document.querySelectorAll("section.era").forEach(sec => {
+    const list = $(".list", sec);
+    const any = [...list.children].some(c => c.classList.contains("ev") && !c.hidden);
+    let msg = $(".empty", list);
+    if (!any && !msg) { msg = document.createElement("p"); msg.className = "empty"; msg.textContent = "No events match your filters in this term."; list.append(msg); }
+    if (any && msg) msg.remove();
+  });
+  $("#count").textContent = "Showing " + shown + " of " + EVENTS.length + " events";
+}
+$("#q").addEventListener("input", e => { state.q = e.target.value; apply(); });
+$("#quizbtn").addEventListener("click", e => {
+  state.quiz = !state.quiz;
+  e.currentTarget.setAttribute("aria-pressed", String(state.quiz));
+  document.body.classList.toggle("quiz", state.quiz);
+  if (!state.quiz) EVENTS.forEach(x => x.el.classList.remove("shown"));
+});
+$("#reset").addEventListener("click", () => {
+  state.cats = new Set(Object.keys(CATS)); state.q = ""; $("#q").value = "";
+  chips.querySelectorAll(".chip").forEach(c => c.setAttribute("aria-pressed", "true"));
+  apply();
+});
+apply();
+
+// highlight the term you are currently reading
+const bars = Object.fromEntries(TERMS.map(t => [t.id, document.getElementById("b-" + t.id)]));
+function setActive(id) { Object.entries(bars).forEach(([k, b]) => b.classList.toggle("active", k === id)); }
+setActive(TERMS[0].id);
+if ("IntersectionObserver" in window) {
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(en => { if (en.isIntersecting) setActive(en.target.dataset.term); });
+  }, { rootMargin: "-25% 0px -65% 0px" });
+  document.querySelectorAll("section.era").forEach(s => io.observe(s));
+}
+</script>
+</body>
+</html>
