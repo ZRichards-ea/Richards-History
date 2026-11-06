@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Unit 2 Timeline</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Newsreader:opsz,wght@6..72,500;6..72,700&display=swap">
+<style>
+:root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --bg: #f6f7f9; --panel: #ffffff; --ink: #172033; --muted: #52607a; --line: #d5dae3;
+  --gov: #1f4e8c; --war: #a62f3d; --econ: #26704a; --slav: #6a3f99; --nat: #a8651a; --ref: #0f766e;
+  --serif: "Newsreader", Georgia, "Times New Roman", serif;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11161f; --panel: #181f2c; --ink: #e8edf5; --muted: #a3afc5; --line: #2d374a;
+    --gov: #7fb0ee; --war: #f08a97; --econ: #6fcf9b; --slav: #bb9be8; --nat: #f0b25f; --ref: #5fd0c5;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #11161f; --panel: #181f2c; --ink: #e8edf5; --muted: #a3afc5; --line: #2d374a;
+  --gov: #7fb0ee; --war: #f08a97; --econ: #6fcf9b; --slav: #bb9be8; --nat: #f0b25f; --ref: #5fd0c5;
+  color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: inherit; }
+html { height: 100%; scroll-padding-top: calc(env(safe-area-inset-top, 0px) + 4.5rem); }
+body {
+  margin: 0; min-height: 100%; background: var(--bg); color: var(--ink);
+  font-family: var(--sans); font-size: 1.0625rem; line-height: 1.5;
+}
+body::before {
+  content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px);
+  background: var(--panel); z-index: 10;
+}
+button, input { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--gov); outline-offset: 2px; }
+
+.wrap { max-width: 64rem; margin: 0 auto; padding: 0 1.1rem; }
+
+header.top { padding: 2rem 0 1rem; }
+header.top h1 {
+  font-family: var(--serif); font-weight: 700; font-size: clamp(1.9rem, 4.6vw, 3rem);
+  line-height: 1.1; margin: 0 0 .5rem; letter-spacing: -0.01em;
+}
+header.top p.lede { margin: 0; max-width: 42rem; color: var(--muted); font-size: 1.05rem; }
+
+.controls { display: grid; gap: .75rem; padding: .5rem 0 1.1rem; }
+.chips { display: flex; flex-wrap: wrap; gap: .45rem; }
+.chip {
+  display: inline-flex; align-items: center; gap: .45rem; padding: .35rem .8rem;
+  border: 1.5px solid var(--line); border-radius: 999px; background: var(--panel); cursor: pointer;
+  font-size: .95rem;
+}
+.chip .sw { width: .8rem; height: .8rem; border-radius: 50%; background: var(--c); }
+.chip[aria-pressed="false"] { opacity: .5; }
+.chip[aria-pressed="true"] { border-color: var(--c); }
+.row2 { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; }
+.search {
+  flex: 1 1 14rem; padding: .5rem .8rem; border: 1.5px solid var(--line); border-radius: 8px; background: var(--panel);
+}
+.btn {
+  padding: .5rem .9rem; border: 1.5px solid var(--line); border-radius: 8px; background: var(--panel); cursor: pointer;
+}
+.btn[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.count { color: var(--muted); font-size: .95rem; margin-left: auto; }
+
+/* sticky presidents bar */
+.termsbar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 11;
+  background: var(--panel); border-block: 1px solid var(--line); padding: .55rem 0;
+}
+.termsbar .wrap { display: flex; gap: 3px; overflow-x: auto; position: relative; scrollbar-width: thin; }
+.term {
+  flex: var(--w) 1 0; min-width: 3.4rem; padding: .4rem .35rem; text-align: left; cursor: pointer;
+  border: 1.5px solid var(--line); border-radius: 6px; background: var(--bg); line-height: 1.2;
+}
+.term .nm { display: block; font-weight: 700; font-size: .9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.term .yrs { display: block; color: var(--muted); font-size: .78rem; white-space: nowrap; }
+.term.active { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.term.active .yrs { color: inherit; opacity: .8; }
+.term.conf { border-style: dashed; }
+@media (max-width: 40rem) {
+  .term .full { display: none; } .term .short { display: inline; }
+  .term .yrs { display: none; }
+}
+@media (min-width: 40.01rem) { .term .short { display: none; } }
+
+/* sections */
+section.era { padding-top: 2.4rem; }
+.era-head { border-left: 6px solid var(--ink); padding: .15rem 0 .15rem 1rem; margin-bottom: .6rem; }
+.era-head h2 { font-family: var(--serif); font-size: clamp(1.5rem, 3.4vw, 2.1rem); margin: 0; line-height: 1.15; }
+.era-head .meta { margin: .2rem 0 0; color: var(--muted); }
+.era-head .stories { margin: .35rem 0 0; max-width: 40rem; }
+
+.ev {
+  display: grid; grid-template-columns: 5.2rem 1fr; gap: 0 1.1rem;
+  padding: 1rem 0; border-top: 1px solid var(--line); cursor: default;
+}
+.ev[hidden] { display: none; }
+.when { text-align: right; }
+.yr { display: block; font-family: var(--serif); font-weight: 700; font-size: 1.7rem; line-height: 1; }
+.yr.span { font-size: 1.25rem; }
+.mo { display: block; color: var(--muted); font-size: .9rem; margin-top: .2rem; }
+.body h3 { font-family: var(--serif); font-size: 1.28rem; line-height: 1.25; margin: 0 0 .15rem; font-weight: 700; }
+.cat { display: inline-flex; align-items: center; gap: .4rem; font-size: .88rem; font-weight: 700; color: var(--c); margin: 0 0 .35rem; }
+.cat .sw { width: .7rem; height: .7rem; background: var(--c); border-radius: 2px; }
+.body p { margin: 0 0 .35rem; max-width: 40rem; }
+.nxt { color: var(--ink); }
+.nxt b { font-weight: 700; }
+.fine { color: var(--muted); font-size: .88rem; }
+.ev[data-cat="gov"] { --c: var(--gov); } .ev[data-cat="war"] { --c: var(--war); }
+.ev[data-cat="econ"] { --c: var(--econ); } .ev[data-cat="slav"] { --c: var(--slav); } .ev[data-cat="nat"] { --c: var(--nat); } .ev[data-cat="ref"] { --c: var(--ref); }
+
+.empty { padding: 1rem 0; color: var(--muted); border-top: 1px solid var(--line); }
+
+/* quiz mode: cover dates until tapped */
+body.quiz .ev:not(.shown) .when, body.quiz .ev:not(.shown) .presline { filter: blur(7px); user-select: none; }
+body.quiz .ev { cursor: pointer; }
+body.quiz .ev:not(.shown)::after { content: none; }
+
+footer.end { padding: 2.5rem 0 3rem; color: var(--muted); font-size: .92rem; border-top: 1px solid var(--line); margin-top: 2rem; }
+
+@media (max-width: 36rem) {
+  .ev { grid-template-columns: 3.6rem 1fr; gap: 0 .75rem; }
+  .yr { font-size: 1.3rem; } .yr.span { font-size: 1rem; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+@media print {
+  body::before, .controls, .termsbar { display: none !important; }
+  :root { --bg: #fff; --panel: #fff; --ink: #000; --muted: #333; --line: #bbb; }
+  .ev { break-inside: avoid; } section.era { break-before: auto; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1>Unit 2 Timeline</h1>
+    <p class="lede">Every event is listed under the president (or government) in office when it happened, so you can see what came first and who was in charge. Filter by topic, search, or cover the dates to quiz yourself.</p>
+  </header>
+  <div class="controls">
+    <div class="chips" id="chips" role="group" aria-label="Filter by topic"></div>
+    <div class="row2">
+      <input class="search" id="q" type="search" placeholder="Search events (try “bank” or “Jackson”)" aria-label="Search events">
+      <button class="btn" id="quizbtn" aria-pressed="false" title="Blur the dates; tap an event to reveal it">Quiz mode: cover the dates</button>
+      <button class="btn" id="reset">Show everything</button>
+      <span class="count" id="count" aria-live="polite"></span>
+    </div>
+  </div>
+</div>
+
+<nav class="termsbar" aria-label="Presidential terms">
+  <div class="wrap" id="terms"></div>
+</nav>
+
+<main class="wrap" id="main"></main>
+
+<footer class="end">
+  <div class="wrap">Built from the American Yawp (Ch. 7–12) and class lessons. Events from outside the textbook are labeled. The timeline ends at Fort Sumter in April 1861.</div>
+</footer>
+
+<script>
+const TERMS = [
+  { id: "conf", name: "Confederation Congress", short: "Confed.", start: 0, spanStart: 1787.5, party: "Government under the Articles of Confederation", label: "to April 1789",
+    stories: "A weak national government gives way to the Constitution." },
+  { id: "wash", name: "George Washington", short: "Washington", start: 1789.25, party: "No party", label: "1789–1797",
+    stories: "Hamilton’s financial plan, the Bill of Rights, the Whiskey Rebellion, neutrality, Jay’s Treaty, and the first political parties." },
+  { id: "adams", name: "John Adams", short: "Adams", start: 1797.1667, party: "Federalist", label: "1797–1801",
+    stories: "The XYZ Affair, the Quasi-War, and the Alien and Sedition Acts." },
+  { id: "jeff", name: "Thomas Jefferson", short: "Jefferson", start: 1801.1667, party: "Democratic-Republican", label: "1801–1809",
+    stories: "Marbury v. Madison, the Louisiana Purchase, and the Embargo Act." },
+  { id: "mad", name: "James Madison", short: "Madison", start: 1809.1667, party: "Democratic-Republican", label: "1809–1817",
+    stories: "The War of 1812, the Hartford Convention, and the Second National Bank." },
+  { id: "mon", name: "James Monroe", short: "Monroe", start: 1817.1667, party: "Democratic-Republican", label: "1817–1825",
+    stories: "The Seminole War, Adams-Onís, the Missouri Compromise, the Monroe Doctrine, and the election of 1824." },
+  { id: "jqa", name: "John Quincy Adams", short: "Q. Adams", start: 1825.1667, party: "Democratic-Republican", label: "1825–1829",
+    stories: "The fallout from the “corrupt bargain,” the Erie Canal, the Tariff of Abominations, and Jackson’s victory in 1828." },
+  { id: "jack", name: "Andrew Jackson", short: "Jackson", start: 1829.1667, party: "Democrat", label: "1829–1837",
+    stories: "The spoils system, the Indian Removal Act, the Bank War, nullification, the rise of abolition, and the birth of the Whigs." },
+  { id: "van", name: "Martin Van Buren", short: "Van Buren", start: 1837.1667, party: "Democrat", label: "1837–1841",
+    stories: "The Panic of 1837, the Trail of Tears, the Liberty Party, and “Tippecanoe and Tyler Too.”" },
+  { id: "harr", name: "William Henry Harrison", short: "Harrison", start: 1841.1667, party: "Whig", label: "March–April 1841",
+    stories: "Dies 31 days after his inauguration." },
+  { id: "tyl", name: "John Tyler", short: "Tyler", start: 1841.25, party: "Whig, expelled from the party", label: "1841–1845",
+    stories: "Bank vetoes, Prigg v. Pennsylvania, Garnet’s address, and the offer of Texas statehood." },
+  { id: "polk", name: "James K. Polk", short: "Polk", start: 1845.1667, party: "Democrat", label: "1845–1849",
+    stories: "Texas statehood, the Mexican War, Guadalupe Hidalgo, the gold discovery, Seneca Falls, and the Free Soil Party." },
+  { id: "tay", name: "Zachary Taylor", short: "Taylor", start: 1849.1667, party: "Whig", label: "1849–1850",
+    stories: "The Gold Rush and California’s push for statehood." },
+  { id: "fill", name: "Millard Fillmore", short: "Fillmore", start: 1850.5, party: "Whig", label: "1850–1853",
+    stories: "The Compromise of 1850, the Fugitive Slave Act, and Uncle Tom’s Cabin." },
+  { id: "pier", name: "Franklin Pierce", short: "Pierce", start: 1853.1667, party: "Democrat", label: "1853–1857",
+    stories: "Kansas-Nebraska, Anthony Burns, the Republican Party, Bleeding Kansas, and the caning of Sumner." },
+  { id: "buch", name: "James Buchanan", short: "Buchanan", start: 1857.1667, party: "Democrat", label: "1857–1861",
+    stories: "Dred Scott, Lincoln and Douglas, Harpers Ferry, Lincoln’s election, and secession." },
+  { id: "linc", name: "Abraham Lincoln", short: "Lincoln", start: 1861.1667, party: "Republican", label: "from March 1861",
+    stories: "Fort Sumter and the start of the Civil War." }
+];
+const END = 1861.4;
+
+const CATS = {
+  gov:  { label: "Government & politics" },
+  war:  { label: "Foreign affairs & war" },
+  econ: { label: "Economy & technology" },
+  slav: { label: "Slavery & race" },
+  nat:  { label: "Native nations" },
+  ref:  { label: "Reform & society" }
+};
+const MONTHS = ["Jan.","Feb.","Mar.","Apr.","May","June","July","Aug.","Sept.","Oct.","Nov.","Dec."];
+
+// y, m (1–12, used for ordering), show (optional display text), pres (optional override)
+const EVENTS = [
+ {y:1787,m:7,title:"Northwest Ordinance",cat:"gov",text:"Sets rules for the Northwest Territory. Article VI bans slavery north and west of the Ohio River.",next:"Many Americans expect slavery to fade, but Congress soon starts balancing free and slave states.",src:"Ch. 7 §IX"},
+ {y:1787,m:8,title:"Slave-trade compromise",cat:"slav",text:"New England agrees to protect the foreign slave trade for 20 years. South Carolina and Georgia back commercial laws. The three-fifths clause counts enslaved people for representation.",next:"Congress bans the Atlantic slave trade in 1808.",src:"Ch. 7 §V"},
+ {y:1788,m:6,show:"1788",title:"Constitution takes effect",cat:"gov",text:"Enough states ratify for the Constitution to take effect. Virginia votes 89–79.",next:"Rhode Island holds out until 1790.",src:"Ch. 7 §IV"},
+
+ {y:1789,m:4,title:"Washington becomes president",cat:"gov",text:"Washington takes office as the first president under the Constitution.",src:"Ch. 7"},
+ {y:1789,m:7,show:"1789",title:"French Revolution begins",cat:"war",text:"The French overthrow their king. At first Americans cheer with parades and ribbons pinned to their hats.",next:"The execution of the king and the Reign of Terror turn many Americans against it.",src:"Ch. 7 §VIII"},
+ {y:1789,m:9,show:"1789",title:"Slater builds an English-style textile mill",cat:"econ",text:"Samuel Slater, a British immigrant, copies English textile machines in Rhode Island.",next:"Francis Cabot Lowell takes the idea further in 1813.",src:"Ch. 9 §II"},
+ {y:1790,m:3,title:"Naturalization Act of 1790",cat:"slav",text:"Limits federal citizenship for immigrants to “free, white people.”",src:"Ch. 7 §IX"},
+ {y:1790,m:5,title:"Rhode Island ratifies",cat:"gov",text:"The last of the 13 states ratifies, a year after Washington took office.",src:"Ch. 7 §IV"},
+ {y:1790,m:8,show:"1790",title:"Federal government assumes state war debts",cat:"econ",text:"Hamilton’s plan has the federal government take over about $25 million of state war debts. Critics say it rewards speculators.",next:"Hamilton proposes a national bank and a whiskey tax to support the new debt.",src:"Ch. 7 §VI"},
+ {y:1791,m:2,title:"Bank of the United States chartered",cat:"econ",text:"Twenty-year charter; the government owns 20 percent. Jefferson says the Constitution never allowed it; Hamilton says it is essential.",next:"The Second National Bank follows in 1816, and Jackson fights it in the 1830s.",src:"Ch. 7 §VI"},
+ {y:1791,m:3,title:"Vermont joins the Union (free)",cat:"slav",text:"Vermont enters as a free state.",next:"Kentucky enters as a slave state in 1792.",src:"Ch. 7 §IX"},
+ {y:1791,m:3,show:"1791",title:"Excise tax on whiskey",cat:"econ",text:"To pay the new debt, the government taxes whiskey. Western farmers, who turn grain into whiskey, are hit hardest.",next:"Protests become the Whiskey Rebellion in 1794.",src:"Ch. 7 §VII"},
+ {y:1791,m:12,title:"Bill of Rights ratified",cat:"gov",text:"Ten amendments are added to the Constitution. Madison supports them as a political compromise.",src:"Ch. 7 §V"},
+ {y:1792,m:6,title:"Kentucky joins the Union (slave)",cat:"slav",text:"Kentucky enters as a slave state, and Congress begins balancing free and slave states.",src:"Ch. 7 §IX"},
+ {y:1793,m:1,title:"King Louis XVI executed",cat:"war",text:"The French king is executed and the Reign of Terror follows, turning many Americans against the French Revolution.",src:"Ch. 7 §VIII"},
+ {y:1793,m:2,title:"Fugitive Slave Law of 1793",cat:"slav",text:"Makes helping a person escape slavery a federal crime.",src:"Ch. 7 §IX"},
+ {y:1793,m:4,title:"Citizen Genêt arrives",cat:"war",text:"The French ambassador urges Americans to attack Spain’s colonies. Washington demands his recall, but Genêt stays in America.",src:"Ch. 7 §VIII"},
+ {y:1793,m:4,title:"Neutrality Proclamation",cat:"war",text:"Washington declares that the United States will not take sides in Britain’s war with France.",next:"British impressment and ship seizures continue, leading to Jay’s Treaty.",src:"Ch. 7 §VII–VIII"},
+ {y:1794,m:3,show:"1794",title:"Cotton gin",cat:"econ",text:"The cotton gin makes short-staple cotton profitable and spreads plantation slavery westward.",next:"Enslaved population grows from about 654,000 (1790) to over 1.1 million (1810).",src:"Ch. 7 §IX"},
+ {y:1794,m:7,title:"Whiskey Rebellion",cat:"gov",text:"About 7,000 armed farmers gather near Pittsburgh. Washington raises 13,000 militia and leads them briefly; the rebels scatter.",src:"Ch. 7 §VII"},
+ {y:1794,m:11,title:"Jay’s Treaty",cat:"war",text:"Britain agrees to leave its Northwest forts by 1796, but impressment continues. Republicans are furious.",next:"The fight over the treaty turns two factions into two parties.",src:"Ch. 7 §VII"},
+ {y:1796,m:9,title:"Washington’s Farewell Address",cat:"gov",text:"Washington warns against party spirit and foreign entanglements, and steps down after two terms.",src:"Ch. 7 §XII; Yawp Reader"},
+ {y:1796,m:11,title:"John Adams elected",cat:"gov",text:"Adams wins the presidency, and power passes peacefully from Washington.",src:"Ch. 7 §VIII"},
+
+ {y:1797,m:10,show:"1797–98",title:"XYZ Affair",cat:"war",text:"French agents hint at a bribe before talks. Americans are furious: “Millions for defense, but not one cent for tribute.”",next:"Leads to the Quasi-War and the Alien and Sedition Acts.",src:"Ch. 7 §VIII"},
+ {y:1798,m:2,show:"1798",title:"Quasi-War with France",cat:"war",text:"An undeclared naval war with France, fought mostly at sea.",src:"Ch. 7 §VIII"},
+ {y:1798,m:7,title:"Alien and Sedition Acts",cat:"gov",text:"Allow deporting foreigners and punishing criticism of the government. Republican printers are prosecuted.",next:"Jefferson and Madison answer with the Kentucky and Virginia Resolutions.",src:"Ch. 7 §VIII"},
+ {y:1798,m:11,show:"1798–99",title:"Kentucky and Virginia Resolutions",cat:"gov",text:"Jefferson and Madison argue that states can declare federal laws unconstitutional.",next:"The idea returns in the Nullification Crisis of 1832.",src:"Ch. 7 §VIII"},
+ {y:1800,m:8,title:"Gabriel’s Rebellion",cat:"slav",text:"About 1,000 enslaved men plan to attack Richmond. The plot is betrayed, and Gabriel and others are executed.",src:"Ch. 8 §II"},
+ {y:1800,m:11,title:"Election of 1800",cat:"gov",text:"Jefferson and Aaron Burr tie with 73 electoral votes each; Adams gets 65. The tie goes to the House.",next:"The House needs 36 ballots, in February 1801.",src:"Ch. 7 §XI"},
+ {y:1801,m:2,title:"House elects Jefferson",cat:"gov",text:"The House breaks the tie on the 36th ballot. Adams leaves office peacefully on March 4.",next:"The Twelfth Amendment (1804) changes the electoral rules.",src:"Ch. 7 §XI"},
+
+ {y:1803,m:2,title:"Marbury v. Madison",cat:"gov",text:"The Supreme Court claims judicial review: the power to strike down laws that violate the Constitution.",src:"Ch. 7 §XI"},
+ {y:1803,m:4,show:"1803",title:"Louisiana Purchase",cat:"war",text:"Jefferson buys Louisiana from Napoleon for $15 million, doubling the country. Federalists worry it will add slave states.",src:"Ch. 8 §IV"},
+ {y:1804,m:1,show:"1804",title:"Haiti declares independence",cat:"slav",text:"The Haitian Revolution succeeds. It inspires Black Americans and terrifies many white Americans.",src:"Ch. 8 §II"},
+ {y:1804,m:6,show:"1804",title:"Twelfth Amendment",cat:"gov",text:"Changes the electoral rules to prevent deadlocks like the one in 1800.",src:"Ch. 7 §XI"},
+ {y:1807,m:6,title:"British warship attacks the USS Chesapeake",cat:"war",text:"HMS Leopard attacks an American frigate, outraging Americans over impressment.",next:"Jefferson answers with the Embargo Act.",src:"Ch. 8 §IV"},
+ {y:1807,m:8,title:"Fulton’s steamboat service on the Hudson",cat:"econ",text:"Robert Fulton starts the first commercial steamboat service.",next:"By 1830 more than 200 steamboats run on Western waters.",src:"Ch. 9 §II"},
+ {y:1807,m:12,title:"Embargo Act",cat:"war",text:"Jefferson closes U.S. ports to foreign trade. It hurts Americans more than Europe, and smuggling grows.",src:"Ch. 8 §IV"},
+ {y:1808,m:1,title:"Atlantic slave trade ban takes effect",cat:"slav",text:"Congress ends the legal import of Africans. Enforcement is weak, and slavery keeps growing.",src:"Ch. 7 §V"},
+ {y:1809,m:3,title:"Embargo repealed",cat:"war",text:"Congress ends the embargo after about fifteen months. Madison takes office days later.",pres:"jeff",src:"Ch. 8 §VI"},
+
+ {y:1811,m:11,title:"Battle of Tippecanoe",cat:"nat",text:"Forces led by William Henry Harrison drive the Prophet’s followers from their gathering place. Tension grows with Native nations and Britain.",next:"Helps push Americans toward the War of 1812.",src:"Ch. 8 §VI"},
+ {y:1812,m:6,title:"War of 1812 declared",cat:"war",text:"Madison signs the declaration of war on June 18 over impressment, trade restrictions, and frontier conflict.",src:"Ch. 8 §VI"},
+ {y:1812,m:8,title:"USS Constitution becomes “Old Ironsides”",cat:"war",text:"British cannonballs bounce off its thick hull.",src:"Ch. 8 §VI"},
+ {y:1813,m:6,show:"1813",title:"Lowell’s powered loom",cat:"econ",text:"Francis Cabot Lowell memorizes and smuggles British loom designs, starting the Waltham-Lowell mill system.",src:"Ch. 9 §II"},
+ {y:1813,m:10,show:"1813",title:"Tecumseh killed",cat:"nat",text:"By the end of 1813 Americans recapture Detroit, shatter the Native alliance, and kill Tecumseh.",src:"Ch. 8 §VI"},
+ {y:1814,m:3,title:"Battle of Horseshoe Bend",cat:"nat",text:"Andrew Jackson wins a decisive victory in the Creek War.",src:"Ch. 9 §III"},
+ {y:1814,m:8,title:"British burn Washington, D.C.",cat:"war",text:"British forces burn the capital on August 24.",src:"Ch. 8 §VI"},
+ {y:1814,m:9,title:"Fort McHenry and the “Star-Spangled Banner”",cat:"war",text:"Fort McHenry withstands a 27-hour bombardment, inspiring Francis Scott Key’s poem.",src:"Ch. 8 §VI"},
+ {y:1814,m:12,title:"Hartford Convention",cat:"gov",text:"New England Federalists propose amendments, including ending the three-fifths rule. Critics accuse them of plotting secession.",src:"Ch. 8 §VI"},
+ {y:1814,m:12,title:"Treaty of Ghent signed",cat:"war",text:"Signed December 24, the treaty ends the war and returns relations to their prewar state.",next:"The Battle of New Orleans comes after the signing.",src:"Ch. 8 §VI"},
+ {y:1815,m:1,title:"Battle of New Orleans",cat:"war",text:"Jackson’s victory comes after the treaty is signed, but it boosts American morale and shapes how the war is remembered.",src:"Ch. 8 §VI"},
+ {y:1816,m:4,title:"Second National Bank chartered",cat:"econ",text:"Regulates state banks and issues a uniform national currency.",next:"Jackson fights it in the Bank War of the 1830s.",src:"Ch. 9 §I"},
+ {y:1817,m:2,show:"1817",title:"Calhoun urges roads and canals",cat:"econ",text:"John C. Calhoun urges a “perfect system of roads and canals” to bind the republic together.",next:"Clay names the “American System” in 1824.",src:"Ch. 8 §VI"},
+
+ {y:1818,m:4,show:"1818",title:"Jackson invades Spanish Florida",cat:"war",text:"The First Seminole War. Jackson’s invasion puts pressure on Spain.",next:"Spain gives Florida to the United States in 1819.",src:"Ch. 9 §III"},
+ {y:1819,m:2,title:"Adams-Onís Treaty",cat:"war",text:"Spain gives Florida to the United States.",src:"Ch. 9 §III"},
+ {y:1823,m:12,title:"Monroe Doctrine",cat:"war",text:"Monroe declares the Western Hemisphere closed to new European colonization.",src:"Ch. 8 §VI"},
+ {y:1824,m:3,title:"Clay names the “American System”",cat:"econ",text:"Henry Clay defends a protective tariff, a national bank, and federally funded internal improvements.",src:"House History and Senate.gov (outside the textbook)"},
+ {y:1824,m:11,title:"Election of 1824",cat:"gov",text:"Four candidates split the vote. Jackson wins the most votes but no majority, so the House decides.",next:"The House picks John Quincy Adams in February 1825.",src:"Ch. 9 §III"},
+ {y:1825,m:2,title:"House elects John Quincy Adams",cat:"gov",text:"Clay’s support helps Adams win. Jackson’s backers call it a “corrupt bargain” when Clay becomes secretary of state.",next:"Jackson runs again in 1828.",src:"Ch. 9 §III"},
+ {y:1825,m:10,title:"Erie Canal opens",cat:"econ",text:"A 363-mile canal links the Great Lakes to the Hudson River and New York City.",src:"Ch. 9 §II"},
+ {y:1828,m:11,title:"Election of 1828",cat:"gov",text:"Jackson defeats Adams after a bitter campaign. He takes office in March 1829.",src:"Ch. 9 §III"},
+
+ {y:1820,m:3,title:"Missouri Compromise",cat:"slav",text:"Missouri enters as a slave state and Maine as a free state. Slavery is banned north of 36°30′ in the rest of the Louisiana Purchase.",next:"Arkansas enters as a slave state under this line in 1836; the Kansas-Nebraska Act undoes it in 1854.",src:"Ch. 9 §V"},
+ {y:1828,m:5,show:"1828",title:"Tariff of Abominations",cat:"econ",text:"A high import tax protects Northern factories and raises costs for Southerners. South Carolina leads the protest, calling the tariff an “entering wedge” for limits on slavery.",next:"Calhoun secretly drafts the “Exposition and Protest.”",src:"Ch. 10 §II"},
+ {y:1828,m:12,show:"1828",title:"Calhoun’s “Exposition and Protest”",cat:"gov",text:"Calhoun secretly drafts the doctrine of nullification, drawing on the Kentucky and Virginia Resolutions of 1798–99.",next:"South Carolina nullifies the tariffs in 1832.",src:"Ch. 10 §II"},
+ {y:1829,m:4,show:"1829",title:"Rotation in office and the spoils system",cat:"gov",text:"Jackson removes about 900 federal officials and replaces them with supporters. Critics call it the “spoils system.”",src:"Ch. 10 §II"},
+ {y:1829,m:5,show:"1829–31",title:"The Eaton Affair",cat:"gov",text:"Cabinet wives snub Margaret Eaton. Jackson defends her, and the feud breaks up his cabinet.",next:"In 1831 Jackson replaces nearly his whole cabinet.",src:"Ch. 10 §II"},
+ {y:1829,m:9,show:"1829",title:"David Walker’s Appeal",cat:"slav",text:"Walker’s pamphlet exposes American hypocrisy about freedom and defends resistance to slavery.",src:"Ch. 10 §XI"},
+ {y:1829,m:10,show:"1829",title:"Gold found in Georgia",cat:"nat",text:"The discovery of gold increases pressure on the Cherokee to give up their land.",next:"Congress passes the Indian Removal Act in 1830.",src:"Ch. 10 §VI"},
+ {y:1830,m:5,title:"Maysville Road veto",cat:"gov",text:"Jackson vetoes a Kentucky road bill championed by Clay and Calhoun, calling it a local matter. He uses the veto more than any earlier president.",src:"Ch. 10 §II"},
+ {y:1830,m:5,title:"Indian Removal Act",cat:"nat",text:"Congress lets the president trade western land for Native lands east of the Mississippi.",next:"The Treaty of New Echota (1835) and the Trail of Tears (1838) follow.",src:"Ch. 10 §VI"},
+ {y:1831,m:1,title:"The Liberator begins",cat:"slav",text:"William Lloyd Garrison starts his newspaper calling for immediate abolition. Black Northerners like James Forten help finance it.",src:"Ch. 10 §XI"},
+ {y:1831,m:3,show:"1831",title:"Cherokee Nation v. Georgia",cat:"nat",text:"The Supreme Court rules it lacks jurisdiction to hear the Cherokee’s lawsuit.",next:"Worcester v. Georgia follows in 1832.",src:"Ch. 10 §VI"},
+ {y:1831,m:4,show:"1831",title:"Jackson reorganizes his cabinet",cat:"gov",text:"After Van Buren offers to resign, Jackson replaces all but one of his original cabinet members with loyalists.",src:"Ch. 10 §II"},
+ {y:1831,m:8,title:"Nat Turner’s rebellion",cat:"slav",text:"Turner and about 50 men kill 57 white people in Southampton, Virginia. The backlash kills hundreds of enslaved people and tightens laws.",src:"Ch. 10 §XI"},
+ {y:1832,m:3,show:"1832",title:"Worcester v. Georgia",cat:"nat",text:"The Court rules Georgia’s laws do not apply in Cherokee territory. Georgia ignores the decision.",src:"Ch. 10 §VI"},
+ {y:1832,m:4,show:"1832",title:"Black Hawk War",cat:"nat",text:"War in the Old Northwest leads to the removal of many Sauk to Kansas.",src:"Ch. 10 §VI"},
+ {y:1832,m:7,title:"Jackson vetoes the Bank",cat:"econ",text:"Jackson vetoes the recharter of the Second Bank, calling it unconstitutional and “dangerous to the liberties of the people.”",next:"In 1833 he moves federal funds to “pet banks.”",src:"Ch. 10 §III"},
+ {y:1832,m:11,title:"South Carolina nullifies the tariffs",cat:"gov",text:"A state convention declares the tariffs of 1828 and 1832 “null, void, and no law” and threatens secession if they are enforced.",next:"Jackson answers with a proclamation and the Force Bill.",src:"Ch. 10 §III"},
+ {y:1832,m:11,title:"Jackson reelected",cat:"gov",text:"Jackson easily defeats Henry Clay.",src:"Ch. 10 §III–IV"},
+ {y:1832,m:12,title:"Jackson’s proclamation on nullification",cat:"gov",text:"Jackson declares that “disunion, by armed force, is treason.” Congress passes the Force Bill to enforce the tariffs.",next:"Clay and Calhoun broker a compromise in 1833.",src:"Ch. 10 §III"},
+ {y:1833,m:3,show:"1833",title:"Compromise ends the nullification crisis",cat:"gov",text:"Clay and Calhoun broker a compromise that slowly lowers tariffs. South Carolina rescinds its tariff nullification but nullifies the Force Bill.",src:"Ch. 10 §III (date outside the textbook)"},
+ {y:1833,m:6,show:"1833",title:"Petit Gulf cotton",cat:"econ",text:"Rush Nutt develops a hybrid cotton that yields more usable fiber and fuels the Cotton Revolution.",next:"Cotton exports pass 500 million pounds by 1835.",src:"Ch. 10 §VII"},
+ {y:1833,m:9,show:"1833",title:"“Pet banks”",cat:"econ",text:"Jackson stops depositing federal funds in the Bank and uses selected state banks instead.",src:"Ch. 10 §III"},
+ {y:1833,m:12,show:"1833",title:"American Anti-Slavery Society founded",cat:"slav",text:"Garrison and others form a national society for immediate emancipation.",src:"Ch. 10 §XI"},
+ {y:1834,m:1,show:"1834",title:"Whig Party organizes",cat:"gov",text:"National Republicans, Anti-Masons, and nativists unite against Jackson. Henry Clay gives the party its “Whig” name.",next:"The Second Party System, Whigs against Democrats, lasts until 1854.",src:"Ch. 10 §IV"},
+ {y:1835,m:1,show:"1835",title:"Assassination attempt on Jackson",cat:"gov",text:"Richard Lawrence’s two pistols misfire in the first attempt on a president’s life.",src:"Ch. 10 §I"},
+ {y:1835,m:11,show:"1835–42",title:"Second Seminole War",cat:"nat",text:"The Seminole resist removal in a war that lasts until 1842.",src:"Ch. 10 §VI"},
+ {y:1835,m:12,show:"1835",title:"Treaty of New Echota",cat:"nat",text:"Ridge’s faction cedes Cherokee land in Georgia for $5 million. Most Cherokee call the treaty illegitimate.",next:"The Trail of Tears follows in 1838.",src:"Ch. 10 §VI"},
+ {y:1836,m:3,show:"1836",title:"Texas declares independence",cat:"war",text:"Texians break from Mexico. Santa Anna is defeated at San Jacinto, and Texas becomes a republic.",next:"Texas is annexed in 1845.",src:"Ch. 10 §IX; Ch. 11 §VIII"},
+ {y:1836,m:5,show:"1836",title:"Gag rule and the Great Petition Campaign",cat:"slav",text:"Abolitionists send thousands of petitions to Congress. Whigs and Democrats join to ban discussion of them in the House.",src:"Ch. 10 §XI"},
+ {y:1836,m:6,title:"Arkansas admitted (slave state)",cat:"slav",text:"Arkansas enters under the Missouri Compromise line.",next:"Michigan enters as a free state in 1837.",src:"Ch. 11 §VIII"},
+ {y:1836,m:7,show:"1836",title:"Specie Circular",cat:"econ",text:"The Treasury requires gold or silver for federal land purchases, tightening credit.",next:"The Panic of 1837 follows.",src:"Ch. 10 §V"},
+ {y:1836,m:11,title:"Van Buren elected",cat:"gov",text:"Jackson’s vice president easily wins the presidency.",src:"Ch. 10 §IV"},
+ {y:1837,m:1,title:"Michigan admitted (free state)",cat:"slav",text:"Michigan enters as a free state under the Northwest Ordinance.",src:"Ch. 11 §VIII"},
+ {y:1837,m:5,title:"Panic of 1837",cat:"econ",text:"Banks stop redeeming their notes. About 200 banks close, and opponents call Van Buren “Van Ruin.”",next:"The Whigs gain support.",src:"Ch. 10 §V"},
+ {y:1837,m:11,title:"Elijah Lovejoy killed",cat:"slav",text:"A mob kills the antislavery editor.",src:"Ch. 10 §XI"},
+ {y:1838,m:5,title:"Pennsylvania Hall burned",cat:"slav",text:"A mob burns the new hall during the Anti-Slavery Convention of American Women.",src:"Ch. 10 §XI"},
+ {y:1838,m:6,show:"1838",title:"Trail of Tears",cat:"nat",text:"Van Buren orders the army to remove the Cherokee. About 16,000 begin the journey and about 10,000 finish.",src:"Ch. 10 §VI"},
+ {y:1839,m:11,show:"1839",title:"Liberty Party formed",cat:"slav",text:"Political abolitionists form a party under James G. Birney. They believe the Constitution is antislavery and can be used.",src:"Ch. 11 §V"},
+ {y:1839,m:12,show:"1839",title:"Whigs nominate Harrison",cat:"gov",text:"At Harrisburg the Whigs choose William Henry Harrison, not Clay, and add John Tyler for balance.",src:"Ch. 11 §VIII"},
+ {y:1840,m:5,show:"1840",title:"Abolitionists split over women’s leadership",cat:"slav",text:"Abby Kelley’s election to a committee splits the American Anti-Slavery Society. Arthur Tappan forms the American and Foreign Anti-Slavery Society.",src:"Ch. 11 §V"},
+ {y:1840,m:6,title:"World Anti-Slavery Convention in London",cat:"ref",text:"Organizers refuse to seat female delegates. Lucretia Mott and Elizabeth Cady Stanton return home to pursue women’s rights.",next:"They organize Seneca Falls in 1848.",src:"Ch. 11 §V"},
+ {y:1840,m:11,title:"Election of 1840",cat:"gov",text:"“Tippecanoe and Tyler Too” wins. Harrison is portrayed as the “log cabin and hard cider” candidate.",src:"Ch. 11 §VIII"},
+ {y:1841,m:3,show:"1841",title:"Harrison inaugurated; dies 31 days later",cat:"gov",text:"Harrison gives the longest inaugural address and serves the shortest term in presidential history.",next:"John Tyler becomes president.",src:"Ch. 11 §VIII"},
+ {y:1841,m:8,show:"1841",title:"Tyler is expelled from the Whigs",cat:"gov",text:"After Tyler twice vetoes a new national bank, nearly his entire cabinet resigns and the Whigs expel him.",src:"Ch. 11 §VIII"},
+ {y:1842,m:3,show:"1842",title:"Prigg v. Pennsylvania",cat:"slav",text:"The Court rules that the federal Fugitive Slave Act overrides Pennsylvania’s personal liberty law. Northern states pass new personal liberty laws in 1843.",src:"Ch. 11 §VIII"},
+ {y:1842,m:6,show:"1842",title:"Massachusetts limits child labor",cat:"ref",text:"Children under 12 may work no more than ten hours a day.",src:"Ch. 11 §V"},
+ {y:1843,m:6,show:"1843",title:"First Washington–Baltimore telegraph line",cat:"econ",text:"Congress funds Samuel Morse’s 40-mile telegraph line.",src:"Ch. 11 §II"},
+ {y:1843,m:8,show:"1843",title:"Garnet’s address to the slaves",cat:"slav",text:"Henry Highland Garnet urges enslaved people to “strike for your lives and liberties.”",src:"Ch. 10 §XI"},
+ {y:1844,m:6,show:"1844",title:"Joseph Smith killed",cat:"ref",text:"A mob murders the Mormon prophet. Brigham Young later leads the church west.",src:"Ch. 11 §IV"},
+ {y:1844,m:11,title:"Polk elected",cat:"gov",text:"Polk wins on promises of expansion: Texas, Oregon, and California.",src:"Ch. 11 §VIII"},
+ {y:1844,m:12,show:"1844",title:"Lowell Female Labor Reform Association",cat:"ref",text:"Sarah Bagley helps form the first union of working women in the United States.",src:"Ch. 11 §V"},
+ {y:1845,m:3,title:"Tyler offers Texas annexation",cat:"gov",text:"In his last days in office (March 3) Tyler offers Texas a path to statehood.",pres:"tyl",src:"Ch. 11 §VIII"},
+ {y:1845,m:5,show:"1845",title:"Douglass’s Narrative; British tour",cat:"slav",text:"Frederick Douglass’s autobiography is reprinted in nine editions. His British tour raises money and morale for abolitionists.",src:"Ch. 11 §V"},
+ {y:1845,m:7,title:"Texas becomes the 28th state",cat:"war",text:"Texas accepts annexation on July 4. Mexico denounces it as an act of aggression.",src:"Ch. 11 §VIII"},
+ {y:1845,m:11,title:"Slidell mission",cat:"war",text:"Polk secretly sends John Slidell to offer to buy the Nueces Strip, New Mexico, and California. Mexico refuses to receive him.",src:"Ch. 11 §VII"},
+ {y:1846,m:5,title:"War with Mexico declared",cat:"war",text:"After Mexican cavalry kill 11 U.S. soldiers in disputed land, Congress declares war on May 13. Critics call it “Mr. Polk’s War.”",src:"Ch. 11 §VII"},
+ {y:1846,m:8,show:"1846",title:"Wilmot Proviso",cat:"slav",text:"David Wilmot proposes banning slavery in land taken from Mexico. Southerners revolt.",next:"The Free Soil Party forms in 1848.",src:"Ch. 12 §II (date outside the textbook)"},
+ {y:1846,m:9,show:"1846",title:"Mormon migration west begins",cat:"ref",text:"Brigham Young leads the church westward.",src:"Ch. 11 §IV"},
+ {y:1847,m:9,show:"1847",title:"U.S. troops take Mexico City",cat:"war",text:"General Winfield Scott’s army occupies the capital, but peace takes months. Disease kills seven times as many American soldiers as combat.",src:"Ch. 11 §VII"},
+ {y:1848,m:1,title:"Gold found in California",cat:"econ",text:"James W. Marshall finds gold at Sutter’s sawmill on January 24.",next:"The Gold Rush begins in 1849.",src:"Ch. 12 §II"},
+ {y:1848,m:2,title:"Treaty of Guadalupe Hidalgo",cat:"war",text:"Mexico gives up California, Utah, Nevada, most of Arizona, and parts of other states, and accepts the Rio Grande. The U.S. pays $15 million.",src:"Ch. 11 §VII"},
+ {y:1848,m:5,title:"Wisconsin admitted (free state)",cat:"slav",text:"Wisconsin enters as a free state.",src:"Ch. 11 §VII"},
+ {y:1848,m:7,title:"Seneca Falls Convention",cat:"ref",text:"Stanton’s Declaration of Sentiments, modeled on the Declaration of Independence, lists grievances and demands, including the vote. 68 women and 32 men sign.",src:"Ch. 11 §V"},
+ {y:1848,m:8,title:"Free Soil Party formed",cat:"gov",text:"Antislavery Whigs, Democrats, and Liberty Party members meet in Buffalo to halt slavery’s spread west.",next:"It wins about 10 percent of the vote in November.",src:"Ch. 11 §VII"},
+ {y:1848,m:11,title:"Election of 1848",cat:"gov",text:"Whig Zachary Taylor beats Democrat Lewis Cass. The Free Soil Party wins about 10 percent and a dozen House seats.",src:"Ch. 11 §VII"},
+ {y:1849,m:6,show:"1849",title:"California Gold Rush",cat:"econ",text:"Settlers from around the world rush west. San Francisco grows from about 500 people (1848) to almost 50,000 (1853). The question of slavery in California divides the country.",src:"Ch. 12 §II"},
+ {y:1850,m:7,show:"1850",title:"Taylor dies; Fillmore becomes president",cat:"gov",text:"Taylor dies unexpectedly, and Whig Millard Fillmore takes over.",src:"Ch. 12 §IV"},
+ {y:1850,m:9,show:"1850",title:"Compromise of 1850",cat:"gov",text:"Douglas guides the bills through Congress: California enters free, New Mexico and Utah may decide by popular sovereignty, and a tough new fugitive slave law passes.",src:"Ch. 12 §IV"},
+ {y:1850,m:9,show:"1850",title:"Fugitive Slave Act",cat:"slav",text:"Federal commissioners decide cases with no jury trial. They are paid $10 if they rule someone enslaved and $5 if free. Citizens must help capture freedom seekers.",src:"Ch. 12 §IV"},
+ {y:1852,m:3,show:"1852",title:"Uncle Tom’s Cabin",cat:"slav",text:"Harriet Beecher Stowe’s novel becomes one of the best-selling books in American history after the Bible.",src:"Ch. 12 §IV"},
+ {y:1852,m:11,show:"1852",title:"Whigs collapse in the 1852 election",cat:"gov",text:"The Whigs win only 42 of the electoral votes needed and effectively end as a national party. Democrats return to majorities.",src:"Ch. 12 §IV"},
+ {y:1854,m:5,title:"Kansas-Nebraska Act",cat:"gov",text:"Douglas’s bill opens Kansas and Nebraska to popular sovereignty, overturning the Missouri Compromise line. Chase calls it a plan to open western land to slavery.",src:"Ch. 12 §IV"},
+ {y:1854,m:5,title:"Anthony Burns case",cat:"slav",text:"A mob storms a Boston courthouse and a deputy marshal is killed. Federal troops return Burns to slavery. Many Northerners “woke up stark mad Abolitionists.”",src:"Ch. 12 §IV"},
+ {y:1854,m:6,show:"1854",title:"Gadsden Purchase",cat:"war",text:"The U.S. buys land that solidifies the southern border from the Rio Grande to the Pacific.",src:"Ch. 11 §VII"},
+ {y:1854,m:7,show:"1854",title:"Republican Party formed",cat:"gov",text:"Antislavery critics of Kansas-Nebraska unite in a new party.",next:"It nominates Frémont in 1856 and Lincoln in 1860.",src:"Ch. 12 §IV"},
+ {y:1854,m:10,title:"Lincoln’s Peoria speech",cat:"gov",text:"Lincoln lays out his objections to slavery’s expansion, helping revive his political career.",src:"Ch. 12 §V"},
+ {y:1854,m:11,show:"1854–55",title:"Know-Nothings win elections",cat:"gov",text:"The nativist American Party wins in New England and the Mid-Atlantic but fails in the West.",src:"Ch. 12 §IV"},
+ {y:1856,m:5,show:"1856",title:"Proslavery raiders attack Lawrence; John Brown retaliates",cat:"slav",text:"Violence in “Bleeding Kansas” grows as armed settlers pour in. Brown kills several proslavery Kansans.",src:"Ch. 12 §IV"},
+ {y:1856,m:5,title:"Caning of Charles Sumner",cat:"gov",text:"Preston Brooks beats Senator Sumner with a cane on the Senate floor. Brooks is reelected and receives new canes.",src:"Ch. 12 §IV (the text says 1855; its figure caption says 1856)"},
+ {y:1856,m:11,title:"Election of 1856",cat:"gov",text:"Democrat James Buchanan beats Republican John C. Frémont, who wins 11 of the 16 free states.",src:"Ch. 12 §IV"},
+ {y:1857,m:3,title:"Dred Scott decision",cat:"slav",text:"The Court rules that Black Americans cannot be citizens and can be taken from state to state regardless of state law, repudiating the Missouri Compromise.",src:"Ch. 12 §V"},
+ {y:1857,m:6,show:"1857",title:"Utah War",cat:"gov",text:"Buchanan sends troops against Utah’s Mormons. Critics, even in his own party, say he is abusing his power.",src:"Ch. 12 §V"},
+ {y:1858,m:3,title:"Hammond’s “Cotton Is King” speech",cat:"econ",text:"South Carolina Senator James Henry Hammond asks, “Would any sane nation make war on cotton?” Cotton exports rose from 150,000 bales (1815) to 4.5 million (1859).",src:"Ch. 12 §III"},
+ {y:1858,m:10,show:"1858",title:"Lincoln–Douglas Senate race",cat:"gov",text:"Lincoln loses to Douglas but becomes a leading national Republican. Republicans win the House.",src:"Ch. 12 §V"},
+ {y:1859,m:10,title:"Harpers Ferry",cat:"slav",text:"John Brown raids the federal arsenal on October 16. Robert E. Lee’s troops crush it by October 18. Frederick Douglass had refused to join.",src:"Ch. 12 §V"},
+ {y:1859,m:12,title:"John Brown executed",cat:"slav",text:"Brown goes to the gallows. Northerners show stunning sympathy; Southerners see a sign of Northern hostility.",src:"Ch. 12 §V"},
+ {y:1860,m:5,show:"1860",title:"Parties pick candidates; Democrats split",cat:"gov",text:"Republicans nominate Lincoln in Chicago. Southern Democrats run Breckinridge and Northern Democrats run Douglas.",src:"Ch. 12 §V"},
+ {y:1860,m:11,title:"Election of 1860",cat:"gov",text:"Lincoln wins on November 6 with about 40 percent of the vote and not a single Southern electoral vote.",src:"Ch. 12 §V"},
+ {y:1860,m:12,title:"South Carolina secedes",cat:"gov",text:"On December 20 South Carolina votes to secede and cites the failure to enforce the Fugitive Slave Act.",src:"Ch. 12 §V"},
+ {y:1861,m:1,show:"1861",title:"Six more states secede",cat:"gov",text:"Mississippi, Florida, Alabama, Georgia, Louisiana, and (by early February) Texas leave the Union. Delaware rejects secession.",src:"Ch. 12 §V"},
+ {y:1861,m:2,title:"Confederate States formed",cat:"gov",text:"Southerners draft a constitution protecting slavery and name Jefferson Davis president.",src:"Ch. 12 §V"},
+ {y:1861,m:3,title:"Lincoln inaugurated",cat:"gov",text:"Lincoln says he faces a “task greater than Washington’s.”",src:"Ch. 12 §V"},
+ {y:1861,m:4,title:"Fort Sumter",cat:"war",text:"Confederate forces fire on Fort Sumter in South Carolina. Lincoln calls for 75,000 volunteers, and the Civil War begins.",src:"Ch. 12 §V"}
+];
+
+const tOf = e => e.y + (e.m - 1) / 12;
+EVENTS.forEach((e, i) => { e._i = i; });
+EVENTS.sort((a, b) => tOf(a) - tOf(b) || a._i - b._i);
+function termFor(e) {
+  if (e.pres) return TERMS.find(t => t.id === e.pres);
+  const t = tOf(e);
+  let hit = TERMS[0];
+  for (const term of TERMS) if (t + 0.0001 >= term.start) hit = term;
+  return hit;
+}
+EVENTS.forEach(e => { e.term = termFor(e); });
+
+const $ = (s, r = document) => r.querySelector(s);
+const state = { cats: new Set(Object.keys(CATS)), q: "", quiz: false };
+
+// chips
+const chips = $("#chips");
+Object.entries(CATS).forEach(([k, v]) => {
+  const b = document.createElement("button");
+  b.className = "chip"; b.type = "button"; b.setAttribute("aria-pressed", "true");
+  b.style.setProperty("--c", `var(--${k})`);
+  b.innerHTML = '<span class="sw"></span>';
+  b.append(document.createTextNode(v.label));
+  b.addEventListener("click", () => {
+    if (state.cats.has(k)) state.cats.delete(k); else state.cats.add(k);
+    b.setAttribute("aria-pressed", String(state.cats.has(k)));
+    apply();
+  });
+  chips.append(b);
+});
+
+// terms bar + sections
+const termsEl = $("#terms"), main = $("#main");
+TERMS.forEach((t, idx) => {
+  const next = TERMS[idx + 1];
+  const span = (next ? next.start : END) - (t.id === "conf" ? t.spanStart : t.start);
+  const btn = document.createElement("button");
+  btn.type = "button"; btn.className = "term" + (t.id === "conf" ? " conf" : ""); btn.id = "b-" + t.id;
+  btn.style.setProperty("--w", span.toFixed(2));
+  btn.innerHTML = '<span class="nm"><span class="full"></span><span class="short"></span></span><span class="yrs"></span>';
+  $(".full", btn).textContent = t.name; $(".short", btn).textContent = t.short; $(".yrs", btn).textContent = t.label;
+  btn.addEventListener("click", () => {
+    document.getElementById("t-" + t.id).scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+  });
+  termsEl.append(btn);
+
+  const sec = document.createElement("section");
+  sec.className = "era"; sec.id = "t-" + t.id; sec.dataset.term = t.id;
+  sec.innerHTML = '<div class="era-head"><h2></h2><p class="meta"></p><p class="stories"></p></div><div class="list"></div>';
+  $("h2", sec).textContent = t.name;
+  $(".meta", sec).textContent = t.party + " · " + t.label;
+  $(".stories", sec).textContent = t.stories;
+  main.append(sec);
+});
+
+// events
+EVENTS.forEach(e => {
+  const el = document.createElement("article");
+  el.className = "ev"; el.dataset.cat = e.cat;
+  const yearText = e.show || String(e.y);
+  const mo = e.show ? "" : MONTHS[e.m - 1];
+  el.innerHTML = '<div class="when"><span class="yr"></span><span class="mo"></span></div>' +
+    '<div class="body"><h3></h3><p class="cat"><span class="sw"></span><span class="cl"></span></p><p class="txt"></p><p class="nxt" hidden></p><p class="fine presline"></p><p class="fine srcline"></p></div>';
+  const yr = $(".yr", el); yr.textContent = yearText; if (yearText.length > 4) yr.classList.add("span");
+  $(".mo", el).textContent = mo;
+  $("h3", el).textContent = e.title;
+  $(".cl", el).textContent = CATS[e.cat].label;
+  $(".txt", el).textContent = e.text;
+  if (e.next) { const n = $(".nxt", el); n.hidden = false; n.innerHTML = "<b>Leads to:</b> "; n.append(document.createTextNode(e.next)); }
+  $(".presline", el).textContent = "In office: " + e.term.name;
+  $(".srcline", el).textContent = "Where to read it: " + e.src;
+  el.addEventListener("click", () => { if (state.quiz) el.classList.toggle("shown"); });
+  e.el = el;
+  $("#t-" + e.term.id + " .list").append(el);
+});
+
+function apply() {
+  const q = state.q.trim().toLowerCase();
+  let shown = 0;
+  EVENTS.forEach(e => {
+    const hay = (e.title + " " + e.text + " " + (e.next || "") + " " + CATS[e.cat].label).toLowerCase();
+    const ok = state.cats.has(e.cat) && (!q || hay.includes(q));
+    e.el.hidden = !ok; if (ok) shown++;
+  });
+  document.querySelectorAll("section.era").forEach(sec => {
+    const list = $(".list", sec);
+    const any = [...list.children].some(c => c.classList.contains("ev") && !c.hidden);
+    let msg = $(".empty", list);
+    if (!any && !msg) { msg = document.createElement("p"); msg.className = "empty"; msg.textContent = "No events match your filters in this term."; list.append(msg); }
+    if (any && msg) msg.remove();
+  });
+  $("#count").textContent = "Showing " + shown + " of " + EVENTS.length + " events";
+}
+$("#q").addEventListener("input", e => { state.q = e.target.value; apply(); });
+$("#quizbtn").addEventListener("click", e => {
+  state.quiz = !state.quiz;
+  e.currentTarget.setAttribute("aria-pressed", String(state.quiz));
+  document.body.classList.toggle("quiz", state.quiz);
+  if (!state.quiz) EVENTS.forEach(x => x.el.classList.remove("shown"));
+});
+$("#reset").addEventListener("click", () => {
+  state.cats = new Set(Object.keys(CATS)); state.q = ""; $("#q").value = "";
+  chips.querySelectorAll(".chip").forEach(c => c.setAttribute("aria-pressed", "true"));
+  apply();
+});
+apply();
+
+// highlight the term you are currently reading
+const bars = Object.fromEntries(TERMS.map(t => [t.id, document.getElementById("b-" + t.id)]));
+function setActive(id) {
+  Object.entries(bars).forEach(([k, b]) => b.classList.toggle("active", k === id));
+  const b = bars[id], c = termsEl;
+  if (b && c && c.scrollWidth > c.clientWidth) c.scrollTo({ left: Math.max(0, b.offsetLeft - (c.clientWidth - b.offsetWidth) / 2), behavior: "auto" });
+}
+setActive(TERMS[0].id);
+if ("IntersectionObserver" in window) {
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(en => { if (en.isIntersecting) setActive(en.target.dataset.term); });
+  }, { rootMargin: "-25% 0px -65% 0px" });
+  document.querySelectorAll("section.era").forEach(s => io.observe(s));
+}
+</script>
+</body>
+</html>
